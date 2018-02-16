@@ -6,12 +6,15 @@
 #include <QMetaEnum>
 #include <QRegularExpression>
 
-#include "../../serialization.h"
+#include "serialization.h"
 
 QString eDrillingHub::Protocol::WriteTag(const QString& tagName, const QDateTime& timestamp, const QVariant& value) {
-    QMetaType::Type metaType;
-    auto serialized = Serialization::toJSON(value, metaType);
-    return QString("write|%1|%2|%3|%4").arg(tagName).arg(timestamp.toMSecsSinceEpoch()).arg(metaType).arg(serialized);
+    auto serialized = Serialization::serialize(value);
+    return QString("write|%1|%2|%3|%4").arg(
+                tagName,
+                QString::number(timestamp.toMSecsSinceEpoch()),
+                QString::number(std::get<1>(serialized)),
+                std::get<0>(serialized));
 }
 
 QString eDrillingHub::Protocol::ReadTag(const QString &tag) {

@@ -4,7 +4,7 @@
 #include "edhclient_socket.h"
 #include "edhclient_ws.h"
 
-#include "../../serialization.h"
+#include "serialization.h"
 
 #include <iostream>
 
@@ -26,33 +26,16 @@ Client::Client() {
 Client::~Client() {
 }
 
-Client* Client::create(const QString &url) {
-    QStringList protocolSplit = url.split("://");
-    if (protocolSplit.length() != 2) {
-        std::cerr << "Invalid URL for eDrilling Hub, syntax edh(s)://IP:PORT" << std::endl;
-        return nullptr;
-    }
-
+Client* Client::create(const QUrl& url) {
     QStringList supported_schemas = {"edh", "edhs", "wsedh", "wssedh"};
-    QString schema = protocolSplit[0];
-    if (! supported_schemas.contains(schema)) {
-        std::cerr << "Invalid Schema for eDrilling Hub, supported protocols are edh(s) and ws(s)edh" << std::endl;
+    QString scheme = url.scheme();
+    if (! supported_schemas.contains(scheme)) {
+        std::cerr << "Invalid Scheme for eDrilling Hub, supported protocols are edh(s) and ws(s)edh" << std::endl;
         return nullptr;
     }
 
-    QStringList serverParts = protocolSplit[1].split(":");
-    if (serverParts.length() != 2) {
-        std::cerr << "Invalid URL for eDrilling Hub, syntax edh(s)://IP:PORT" << std::endl;
-        return nullptr;
-    }
-
-    bool ok;
-    auto host = serverParts[0];
-    auto port = serverParts[1].toInt(&ok);
-    if (! ok) {
-        std::cerr << "Invalid port number" << std::endl;
-        return nullptr;
-    }
+    auto host = url.host();
+    auto port = url.port(0);
 
     if (port <= 0 || port > std::numeric_limits<quint16>::max()) {
         std::cerr << "Invalid port number" << std::endl;
@@ -60,16 +43,16 @@ Client* Client::create(const QString &url) {
     }
 
     std::unique_ptr<Client> client;
-    if (schema == "edh") {
+    if (scheme == "edh") {
         client.reset(SocketClient::create(false));
-    } else if (schema == "edhs") {
+    } else if (scheme == "edhs") {
         client.reset(SocketClient::create(true));
-    } else if (schema == "wsedh") {
+    } else if (scheme == "wsedh") {
         client.reset(WebsocketClient::create(false));
-    } else if (schema == "wssedh") {
+    } else if (scheme == "wssedh") {
         client.reset(WebsocketClient::create(true));
     } else {
-        std::cerr << "Unhandled schema" << schema.toStdString() << std::endl;
+        std::cerr << "Unhandled schema" << scheme.toStdString() << std::endl;
         return nullptr;
     }
 

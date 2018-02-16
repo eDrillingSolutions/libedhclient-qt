@@ -5,8 +5,8 @@
 
 #include <QtNetwork/QAbstractSocket>
 
+#include "edhtypes.h"
 #include "edhprotocol.h"
-#include "../../tag/quality.h"
 
 namespace eDrillingHub {
     class ClientPrivate;
@@ -16,7 +16,7 @@ namespace eDrillingHub {
     public:
         Client();
         virtual ~Client();
-        static Client* create(const QString& url);
+        static Client* create(const QUrl& url);
 
         virtual void open() = 0;
         virtual void close() = 0;
