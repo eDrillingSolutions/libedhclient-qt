@@ -5,6 +5,7 @@
 
 #include <QRegularExpression>
 
+namespace eDrillingHub {
 namespace Tag {
     class Value;
     class ValueName;
@@ -59,5 +60,6 @@ private:
     static QMetaType::Type edhMatrixType(const QStringList& list, bool& ok);
     static QMetaType::Type qVectorType(const QStringList& list, bool& ok);
 };
+}
 
 #endif

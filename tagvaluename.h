@@ -2,6 +2,7 @@
 
 #include "tagvalue.h"
 
+namespace eDrillingHub {
 namespace Tag {
     class ValueName {
     public:
@@ -26,8 +27,9 @@ namespace Tag {
         Tag::Value _tag_value;
     };
 }
-Q_DECLARE_METATYPE(Tag::ValueName)
+}
+Q_DECLARE_METATYPE(eDrillingHub::Tag::ValueName)
 
-using TagUpdatedValueSlot = std::function<void (const Tag::ValueName& tv)>;
+using TagUpdatedValueSlot = std::function<void (const eDrillingHub::Tag::ValueName& tv)>;
 
-QDebug operator<<(QDebug dbg, const Tag::ValueName &tvn);
+QDebug operator<<(QDebug dbg, const eDrillingHub::Tag::ValueName &tvn);

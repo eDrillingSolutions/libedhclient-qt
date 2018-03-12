@@ -6,6 +6,7 @@
 #include <QVariant>
 #include <QDataStream>
 
+namespace eDrillingHub {
 template <typename T>
 class Matrix : public QVector<T> {
 public:
@@ -155,7 +156,8 @@ QDataStream& operator<<(QDataStream& s, const Matrix<T>& v) {
 
     return s;
 }
+}
 
-Q_DECLARE_SEQUENTIAL_CONTAINER_METATYPE(EDHMatrix)
+Q_DECLARE_SEQUENTIAL_CONTAINER_METATYPE(eDrillingHub::Matrix)
 
 #endif // EDHMATRIX_H

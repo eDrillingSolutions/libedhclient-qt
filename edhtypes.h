@@ -9,6 +9,7 @@
     #define EXPORT_LIBEDRILLINGHUB_SPEC Q_DECL_IMPORT
 #endif
 
+namespace eDrillingHub {
 namespace Tag {
     class EXPORT_LIBEDRILLINGHUB_SPEC Quality {
         Q_GADGET
@@ -19,7 +20,8 @@ namespace Tag {
         Q_ENUM(Value)
     };
 }
+}
 
-QDataStream& operator>>(QDataStream& s, Tag::Quality::Value& quality);
-QDataStream& operator<<(QDataStream& s, Tag::Quality::Value quality);
+QDataStream& operator>>(QDataStream& s, eDrillingHub::Tag::Quality::Value& quality);
+QDataStream& operator<<(QDataStream& s, eDrillingHub::Tag::Quality::Value quality);
 

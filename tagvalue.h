@@ -2,6 +2,7 @@
 
 #include <QVariant>
 
+namespace eDrillingHub {
 namespace Tag {
     class Value {
         Q_GADGET
@@ -39,9 +40,10 @@ namespace Tag {
         friend QDataStream& operator<<(QDataStream& s, const Value& tv);
     };
 }
-Q_DECLARE_METATYPE(Tag::Value)
+}
+Q_DECLARE_METATYPE(eDrillingHub::Tag::Value)
 
 // QDataStream& operator>>(QDataStream& s, Tag::Value& tv);
 // QDataStream& operator<<(QDataStream& s, const Tag::Value& tv);
 
-QDebug operator<<(QDebug dbg, const Tag::Value &tv);
+QDebug operator<<(QDebug dbg, const eDrillingHub::Tag::Value &tv);

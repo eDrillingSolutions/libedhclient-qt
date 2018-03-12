@@ -8,6 +8,8 @@
 #include "tagvaluename.h"
 #include "timestampeddouble.h"
 
+using namespace eDrillingHub;
+
 static QMetaEnum _qualityEnum() {
     static QMetaEnum _enum = QMetaEnum::fromType<Tag::Quality::Value>();
     return _enum;
