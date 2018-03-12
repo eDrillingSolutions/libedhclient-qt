@@ -57,7 +57,7 @@ static void edhMatrixConvert(QVector<QDateTime>& vector, const QStringList& arra
 }
 
 template <typename T>
-QString Serialization::edhMatrixToQString(const EDHMatrix<T>& matrix) {
+QString Serialization::edhMatrixToQString(const Matrix<T>& matrix) {
     QString value;
 
     qint32 rows = matrix.rows();
@@ -130,18 +130,18 @@ std::tuple<QString, QMetaType::Type> Serialization::serialize(const QVariant& va
             // QMetaTypeId is not known at compile-time, so we can't use switch-statements
             int userType = variant.userType();
 
-            if (userType == qMetaTypeId<EDHMatrix<bool>>()) {
-                value = edhMatrixToQString(variant.value<EDHMatrix<bool>>());
-            } else if (userType == qMetaTypeId<EDHMatrix<int>>()) {
-                value = edhMatrixToQString(variant.value<EDHMatrix<int>>());
-            } else if (userType == qMetaTypeId<EDHMatrix<qint64>>()) {
-                value = edhMatrixToQString(variant.value<EDHMatrix<qint64>>());
-            } else if (userType == qMetaTypeId<EDHMatrix<double>>()) {
-                value = edhMatrixToQString(variant.value<EDHMatrix<double>>());
-            } else if (userType == qMetaTypeId<EDHMatrix<QString>>()) {
-                value = edhMatrixToQString(variant.value<EDHMatrix<QString>>());
-            } else if (userType == qMetaTypeId<EDHMatrix<QDateTime>>()) {
-                value = edhMatrixToQString(variant.value<EDHMatrix<QDateTime>>());
+            if (userType == qMetaTypeId<Matrix<bool>>()) {
+                value = edhMatrixToQString(variant.value<Matrix<bool>>());
+            } else if (userType == qMetaTypeId<Matrix<int>>()) {
+                value = edhMatrixToQString(variant.value<Matrix<int>>());
+            } else if (userType == qMetaTypeId<Matrix<qint64>>()) {
+                value = edhMatrixToQString(variant.value<Matrix<qint64>>());
+            } else if (userType == qMetaTypeId<Matrix<double>>()) {
+                value = edhMatrixToQString(variant.value<Matrix<double>>());
+            } else if (userType == qMetaTypeId<Matrix<QString>>()) {
+                value = edhMatrixToQString(variant.value<Matrix<QString>>());
+            } else if (userType == qMetaTypeId<Matrix<QDateTime>>()) {
+                value = edhMatrixToQString(variant.value<Matrix<QDateTime>>());
             } else if (userType == qMetaTypeId<QVector<bool>>()) {
                 value = iterableToQString(variant.value<QVector<bool>>());
             } else if (userType == qMetaTypeId<QVector<int>>()) {
@@ -231,11 +231,11 @@ QMetaType::Type Serialization::qVectorType(const QStringList &list, bool &ok) {
 }
 
 template <typename T>
-EDHMatrix<T> Serialization::qStringToEDHMatrix(QStringList &list, bool &ok) {
+Matrix<T> Serialization::qStringToEDHMatrix(QStringList &list, bool &ok) {
     if (list.size() < 4) {
         qWarning() << "Dropping faulty EDHMatrix";
         ok = false;
-        return EDHMatrix<T>();
+        return Matrix<T>();
     }
 
     int rows = list[1].toInt();
@@ -244,13 +244,13 @@ EDHMatrix<T> Serialization::qStringToEDHMatrix(QStringList &list, bool &ok) {
 
     if (size == 0) {
         ok = true;
-        return EDHMatrix<T>();
+        return Matrix<T>();
     }
     if ((list.size() - 4) != size) {
         qWarning() << Q_FUNC_INFO << "Size does not match" << list.size() << size;
         qWarning() << list;
         ok = false;
-        return EDHMatrix<T>();
+        return Matrix<T>();
     }
     list.removeFirst();
     list.removeFirst();
@@ -262,7 +262,7 @@ EDHMatrix<T> Serialization::qStringToEDHMatrix(QStringList &list, bool &ok) {
     edhMatrixConvert(vector, list);
 
     ok = true;
-    return EDHMatrix<T>(vector, rows, columns);
+    return Matrix<T>(vector, rows, columns);
 }
 
 template <typename T>
@@ -270,7 +270,7 @@ QVector<T> Serialization::qStringToQVector(QStringList &list, bool &ok) {
     if (list.size() < 3) {
         qWarning() << "Dropping faulty QVector";
         ok = false;
-        return EDHMatrix<T>();
+        return Matrix<T>();
     }
 
     int length = list[1].toInt();
@@ -315,42 +315,42 @@ QVariant Serialization::deserializeTagValue(QMetaType::Type type, const QString 
                 if (ok) {
                     switch (type) {
                     case QMetaType::Bool: {
-                        EDHMatrix<bool> matrix = qStringToEDHMatrix<bool>(list, ok);
+                        Matrix<bool> matrix = qStringToEDHMatrix<bool>(list, ok);
                         if (ok) {
                             variantValue = QVariant::fromValue(matrix);
                         }
                     }
                         break;
                     case QMetaType::Int: {
-                        EDHMatrix<int> matrix = qStringToEDHMatrix<int>(list, ok);
+                        Matrix<int> matrix = qStringToEDHMatrix<int>(list, ok);
                         if (ok) {
                             variantValue = QVariant::fromValue(matrix);
                         }
                     }
                         break;
                     case QMetaType::LongLong: {
-                        EDHMatrix<qint64> matrix = qStringToEDHMatrix<qint64>(list, ok);
+                        Matrix<qint64> matrix = qStringToEDHMatrix<qint64>(list, ok);
                         if (ok) {
                             variantValue = QVariant::fromValue(matrix);
                         }
                     }
                         break;
                     case QMetaType::Double: {
-                        EDHMatrix<double> matrix = qStringToEDHMatrix<double>(list, ok);
+                        Matrix<double> matrix = qStringToEDHMatrix<double>(list, ok);
                         if (ok) {
                             variantValue = QVariant::fromValue(matrix);
                         }
                     }
                         break;
                     case QMetaType::QString: {
-                        EDHMatrix<QString> matrix = qStringToEDHMatrix<QString>(list, ok);
+                        Matrix<QString> matrix = qStringToEDHMatrix<QString>(list, ok);
                         if (ok) {
                             variantValue = QVariant::fromValue(matrix);
                         }
                     }
                         break;
                     case QMetaType::QDateTime: {
-                        EDHMatrix<QDateTime> matrix = qStringToEDHMatrix<QDateTime>(list, ok);
+                        Matrix<QDateTime> matrix = qStringToEDHMatrix<QDateTime>(list, ok);
                         if (ok) {
                             variantValue = QVariant::fromValue(matrix);
                         }

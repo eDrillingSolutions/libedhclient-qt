@@ -41,15 +41,15 @@ private:
     static QStringList deserializeHashList(const QString& rawstring);
 
     template <typename T>
-    static EDHMatrix<T> qStringToEDHMatrix(QStringList& list, bool& ok);
+    static Matrix<T> qStringToEDHMatrix(QStringList& list, bool& ok);
 
     template <typename T>
     static QVector<T> qStringToQVector(QStringList& list, bool& ok);
 
     template <typename T>
-    static QString edhMatrixToQString(const EDHMatrix<T>& matrix);
+    static QString edhMatrixToQString(const Matrix<T>& matrix);
     template <typename T>
-    static QJsonObject edhMatrixToQJsonObject(const EDHMatrix<T>& matrix);
+    static QJsonObject edhMatrixToQJsonObject(const Matrix<T>& matrix);
 
     template <template<typename> class container, typename type>
     static QString iterableToQString(const container<type> &ct);
