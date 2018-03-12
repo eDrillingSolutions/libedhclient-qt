@@ -71,7 +71,7 @@ void Client::proxy(const QNetworkProxy &networkProxy) {
     _networkProxy.reset(new QNetworkProxy(networkProxy));
 }
 
-void Client::updateTagValue(const QString &tagName, const QString &timestamp, const QString &type, const QString &value) {
+void Client::updateTagValue(const QString &tagName, qint64 timestamp, const QString &type, const QString &value) {
     bool ok;
     QMetaType::Type metaType = static_cast<QMetaType::Type>(type.toInt(&ok));
     if (! ok) {
@@ -80,8 +80,7 @@ void Client::updateTagValue(const QString &tagName, const QString &timestamp, co
     }
 
     QVariant variantValue = Serialization::deserializeTagValue(metaType, value);
-    qint64 ts = timestamp.toLongLong();
-    QDateTime dt = QDateTime::fromMSecsSinceEpoch(ts);
+    QDateTime dt = QDateTime::fromMSecsSinceEpoch(timestamp);
 
     emit tagValueUpdated(tagName, dt, metaType, variantValue);
 }
@@ -98,7 +97,7 @@ void Client::updateTagUnit(const QString &tagName, const QString &unit) {
     emit tagUnitUpdated(tagName, unit);
 }
 
-void Client::updateTag(const QString& tagName, const QString& timestamp, const QString& type, const QString& value, const QString& unit, const QString& quality) {
+void Client::updateTag(const QString& tagName, qint64 timestamp, const QString& type, const QString& value, const QString& unit, const QString& quality) {
     updateTagUnit(tagName, unit);
     updateTagQuality(tagName, quality);
     updateTagValue(tagName, timestamp, type, value);
@@ -129,7 +128,7 @@ void Client::handle(const QString &line) {
         }
 
         QString tagName = splits[1];
-        QString timestamp = splits[2];
+        qint64 timestamp = splits[2].toLongLong();
         QString type = splits[3];
         QString value = splits[4];
         QString unit = splits[5];
@@ -150,7 +149,7 @@ void Client::handle(const QString &line) {
                 return;
             }
 
-            QString timestamp = splits[3];
+            qint64 timestamp = splits[3].toLongLong();
             QString type = splits[4];
             QString value = splits[5];
 
@@ -190,13 +189,13 @@ void Client::handle(const QString &line) {
         } else if (splits.size() >= 7) {
             // direct read
             QString tagName = splits[1];
-            QString timestamp = splits[2];
+            qint64 timestamp = splits[2].toLongLong();
             QString type = splits[3];
             QString value = splits[4];
             QString unit = splits[5];
             QString quality = splits[6];
 
-            updateTag(tagName, type, timestamp, value, unit, quality);
+            updateTag(tagName, timestamp, type, value, unit, quality);
         } else {
             qWarning() << "readReply from server, unknown tagName" << tagName;
         }
@@ -227,13 +226,13 @@ void Client::handle(const QString &line) {
         QString subscribeReply = splits[1];
         if (subscribeReply == QStringLiteral("ok")) {
             QString tagName = splits[2];
-            QString timestamp = splits[3];
+            qint64 timestamp = splits[3].toLongLong();
             QString type = splits[4];
             QString value = splits[5];
             QString unit = splits[6];
             QString quality = splits[7];
 
-            updateTag(tagName, type, timestamp, value, unit, quality);
+            updateTag(tagName, timestamp, type, value, unit, quality);
         }
     } else if (main == QStringLiteral("file")) {
         if (splits.size() < 2) {

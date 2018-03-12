@@ -49,10 +49,10 @@ namespace eDrillingHub {
         std::unique_ptr<QNetworkProxy> _networkProxy;
         std::unique_ptr<ClientPrivate> _priv;
     private:
-        void updateTagValue(const QString& tagName, const QString& timestamp, const QString& type, const QString& value);
+        void updateTagValue(const QString& tagName, qint64 timestamp, const QString& type, const QString& value);
         void updateTagQuality(const QString& tagName, const QString& quality);
         void updateTagUnit(const QString& tagName, const QString& unit);
-        void updateTag(const QString& tagName, const QString& timestamp, const QString& type, const QString& value, const QString &unit, const QString &quality);
+        void updateTag(const QString& tagName, qint64 timestamp, const QString& type, const QString& value, const QString &unit, const QString &quality);
         void processDownload(const QByteArray &data);
 
         QHash<QString, QList<ReadTagHolder>> _readingTags;
