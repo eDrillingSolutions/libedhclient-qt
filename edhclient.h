@@ -9,7 +9,7 @@
 #include "edhprotocol.h"
 
 namespace eDrillingHub {
-    class ClientPrivate;
+    struct ClientPrivate;
 
     class Client : public QObject {
         Q_OBJECT
