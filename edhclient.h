@@ -11,7 +11,7 @@
 namespace eDrillingHub {
     struct ClientPrivate;
 
-    class Client : public QObject {
+    class EXPORT_LIBEDRILLINGHUB_SPEC Client : public QObject {
         Q_OBJECT
     public:
         Client();

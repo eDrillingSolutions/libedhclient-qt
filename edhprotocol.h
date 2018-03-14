@@ -9,6 +9,8 @@
 #include <QDateTime>
 #include <QCryptographicHash>
 
+#include "edhtypes.h"
+
 namespace eDrillingHub {
     class DownloadSession : public QObject {
         Q_OBJECT
@@ -71,14 +73,14 @@ namespace eDrillingHub {
         const QString ReadTagTemplate = "read|%1";
         const QString SubscribeTagTemplate = "subscribe|%1";
 
-        QString ReadTag(const QString &tag);
-        QString ReadTagRange(const QString &tag, QDateTime aStart, QDateTime aEnd);
-        QString QueryTagRange(const QString &tag);
-        QString SubscribeTag(const QString &tag);
-        QString WriteTag(const QString& tagName, const QDateTime& timestamp, const QVariant& value);
-        QString SwitchSession(const QString &sessionName);
-        QString Configuration(ServerConfiguration::Operation operation, ServerConfiguration::Target target, ServerConfiguration::Command command, const QString &targetTag);
-        QString FileTransfer(const QString &filename);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC ReadTag(const QString &tag);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC ReadTagRange(const QString &tag, QDateTime aStart, QDateTime aEnd);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC QueryTagRange(const QString &tag);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC SubscribeTag(const QString &tag);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC WriteTag(const QString& tagName, const QDateTime& timestamp, const QVariant& value);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC SwitchSession(const QString &sessionName);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC Configuration(ServerConfiguration::Operation operation, ServerConfiguration::Target target, ServerConfiguration::Command command, const QString &targetTag);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC FileTransfer(const QString &filename);
     }
 };
 Q_DECLARE_METATYPE(eDrillingHub::ReadTagHolder)
