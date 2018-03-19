@@ -17,7 +17,10 @@ using namespace eDrillingHub;
 
 static const QRegularExpression _commandSplitter("(?<!\\\\)\\|");
 static const QRegularExpression _hashListSplitter("(?<!\\\\)#");
-static const QMetaEnum _qualityEnum = QMetaEnum::fromType<Tag::Quality::Value>();
+static QMetaEnum _qualityEnum() {
+    static QMetaEnum _enum = QMetaEnum::fromType<Tag::Quality::Value>();
+    return _enum;
+}
 
 Client::Client() {
     qRegisterMetaType<ReadTagHolder>();
@@ -87,7 +90,7 @@ void Client::updateTagValue(const QString &tagName, qint64 timestamp, const QStr
 
 void Client::updateTagQuality(const QString &tagName, const QString &quality) {
     bool qOk;
-    Tag::Quality::Value edhQuality = static_cast<Tag::Quality::Value>(_qualityEnum.keyToValue(quality.toUtf8(), &qOk));
+    Tag::Quality::Value edhQuality = static_cast<Tag::Quality::Value>(_qualityEnum().keyToValue(quality.toUtf8(), &qOk));
     if (qOk) {
         emit tagQualityUpdated(tagName, edhQuality);
     }
