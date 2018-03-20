@@ -43,7 +43,6 @@ ADD_LIBRARY(edhclient_static
     edhclient_resources.qrc
     $<TARGET_OBJECTS:edhclient_objects>
 )
-SET_TARGET_PROPERTIES(edhclient_static PROPERTIES OUTPUT_NAME edhclient)
 TARGET_LINK_LIBRARIES(edhclient_static
     Qt5::Network
     Qt5::WebSockets
