@@ -17,6 +17,7 @@ namespace eDrillingHub {
         QString errorString();
 
         void write(const QString& message);
+        void writeBinary(const QByteArray& data);
     private:
         WebsocketClient(bool secure);
 

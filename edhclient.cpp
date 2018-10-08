@@ -5,6 +5,7 @@
 #include "edhclient_ws.h"
 
 #include "serialization.h"
+#include "file_session.h"
 
 #include <iostream>
 
@@ -287,6 +288,37 @@ void Client::handle(const QString &line) {
             } else {
                 d.session->fail(DownloadSession::FailReason::Hash, QString());
             }
+        } else if (status == QStringLiteral("upload")) {
+            if (splits.size() < 3) {
+                qWarning() << "Unknown file upload reply from server";
+                return;
+            }
+
+            if (_uploads.isEmpty()) {
+                qWarning() << "file_upload reply from server, but no active upload sessions";
+                return;
+            }
+
+            auto upload_status = splits[2];
+            if (upload_status == QStringLiteral("ready")) {
+                auto session = _uploads.first();
+                session->server_ready();
+            } else if (upload_status == QStringLiteral("success")) {
+                auto session = _uploads.takeFirst();
+                session->success();
+            } else if (upload_status == QStringLiteral("hash_mismatch")) {
+                auto session = _uploads.takeFirst();
+                session->fail(UploadSession::FailReason::Hash, "HashCode mismatch");
+            } else if (upload_status == QStringLiteral("error")) {
+                QString msg;
+                if (splits.size() > 3) {
+                    msg = splits[3];
+                }
+                auto session = _uploads.takeFirst();
+                session->fail(UploadSession::FailReason::Server, msg);
+            } else {
+                qWarning() << "Unknown file_upload reply from server";
+            }
         } else {
             qWarning() << "Unknown file reply";
             return;
@@ -333,7 +365,28 @@ std::shared_ptr<DownloadSession> Client::createDownloadSession() {
     download.hashfn = std::make_shared<QCryptographicHash>(QCryptographicHash::Sha3_512);
     _downloads.append(download);
 
+    connect(download.session.get(), &DownloadSession::download, this, [this](const QString& file) {
+        write(eDrillingHub::Protocol::FileTransfer(file));
+    });
+
     return download.session;
+}
+
+std::shared_ptr<UploadSession> Client::createUploadSession() {
+    auto session = std::make_shared<UploadSession>();
+    _uploads.append(session);
+
+    connect(session.get(), &UploadSession::server_request, this, [this, session] {
+        write(eDrillingHub::Protocol::FileUploadRequest(session->filename(), session->size()));
+    });
+    connect(session.get(), &UploadSession::server_ready, this, [this, session] {
+        auto tail = eDrillingHub::Protocol::FileUploadTransfer(session, [this](const QByteArray& data) {
+            writeBinary(data);
+        });
+        write(tail);
+    });
+
+    return session;
 }
 
 void Client::processDownload(const QByteArray &data) {

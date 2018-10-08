@@ -26,7 +26,9 @@ namespace eDrillingHub {
         virtual QString errorString() = 0;
 
         virtual void write(const QString& message) = 0;
+        virtual void writeBinary(const QByteArray& data) = 0;
         std::shared_ptr<DownloadSession> createDownloadSession();
+        std::shared_ptr<UploadSession> createUploadSession();
     signals:
         void tagValueUpdated(const QString& tagName, const QDateTime& timestamp, QMetaType::Type metaType, const QVariant& variantValue);
         void tagQualityUpdated(const QString& tagName, Tag::Quality::Value ioTagQuality);
@@ -57,5 +59,6 @@ namespace eDrillingHub {
 
         QHash<QString, QList<ReadTagHolder>> _readingTags;
         QVector<Download> _downloads;
+        QVector<std::shared_ptr<UploadSession>> _uploads;
     };
 }

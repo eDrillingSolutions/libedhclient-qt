@@ -12,21 +12,8 @@
 #include "edhtypes.h"
 
 namespace eDrillingHub {
-    class DownloadSession : public QObject {
-        Q_OBJECT
-    public:
-        enum class FailReason {
-            Hash,
-            Server,
-            Unknown
-        };
-        Q_ENUM(FailReason)
-    signals:
-        void download(const QString& file);
-        void progress(QByteArray bytes, qint64 transferred, qint64 size);
-        void success();
-        void fail(FailReason reason, const QString& description);
-    };
+    class DownloadSession;
+    class UploadSession;
 
     class ServerConfiguration {
         Q_GADGET
@@ -81,6 +68,8 @@ namespace eDrillingHub {
         QString EXPORT_LIBEDRILLINGHUB_SPEC SwitchSession(const QString &sessionName);
         QString EXPORT_LIBEDRILLINGHUB_SPEC Configuration(ServerConfiguration::Operation operation, ServerConfiguration::Target target, ServerConfiguration::Command command, const QString &targetTag);
         QString EXPORT_LIBEDRILLINGHUB_SPEC FileTransfer(const QString &filename);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC FileUploadRequest(const QString &filename, qint64 size);
+        QString EXPORT_LIBEDRILLINGHUB_SPEC FileUploadTransfer(std::shared_ptr<UploadSession> session, std::function<void(const QByteArray&)> transfer_fn);
     }
 };
 Q_DECLARE_METATYPE(eDrillingHub::ReadTagHolder)

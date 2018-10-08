@@ -6,6 +6,7 @@
 #include <QMetaEnum>
 #include <QRegularExpression>
 
+#include "file_session.h"
 #include "serialization.h"
 
 QString eDrillingHub::Protocol::WriteTag(const QString& tagName, const QDateTime& timestamp, const QVariant& value) {
@@ -50,8 +51,25 @@ QString eDrillingHub::Protocol::ReadTagRange(const QString &tag, QDateTime aStar
     return request;
 }
 
-QString eDrillingHub::Protocol::FileTransfer(const QString &filename){
+QString eDrillingHub::Protocol::FileTransfer(const QString &filename) {
     return QString("file|transfer|%1").arg(filename);
+}
+QString eDrillingHub::Protocol::FileUploadRequest(const QString &filename, qint64 size) {
+    return QString("file|upload|%1|%2").arg(filename, QString::number(size)).toUtf8();
+}
+QString eDrillingHub::Protocol::FileUploadTransfer(std::shared_ptr<UploadSession> session, std::function<void(const QByteArray&)> transfer_fn) {
+    qint64 transferred = 0;
+    QByteArray data;
+    QCryptographicHash hash(QCryptographicHash::Sha3_512);
+
+    while ((data = session->device()->read(65536)).size() > 0) {
+        transferred += data.size();
+        transfer_fn(data);
+        hash.addData(data);
+        session->progress(transferred);
+    }
+
+    return QString("file|upload|done|%1").arg(QString(hash.result().toHex())).toUtf8();
 }
 
 QString eDrillingHub::Protocol::QueryTagRange(const QString &tag) {

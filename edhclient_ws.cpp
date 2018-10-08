@@ -98,6 +98,10 @@ void WebsocketClient::write(const QString &message) {
     _ws->sendTextMessage(message);
 }
 
+void WebsocketClient::writeBinary(const QByteArray &data) {
+    _ws->sendBinaryMessage(data);
+}
+
 void WebsocketClient::_onSslError(const QList<QSslError> &errors) {
     for (const auto& error : errors) {
         std::cerr << "SocketClient: SSL Error: " << error.errorString().toStdString() << std::endl;

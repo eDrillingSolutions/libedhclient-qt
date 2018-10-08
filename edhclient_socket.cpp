@@ -102,6 +102,10 @@ void SocketClient::write(const QString &message) {
     _socket->write(message_end_marker.toUtf8());
 }
 
+void SocketClient::writeBinary(const QByteArray &data) {
+    _socket->write(data);
+}
+
 void SocketClient::_onSocketReadyRead() {
     QByteArray bytes = _socket->readAll();
     _readBuffer.append(bytes);
