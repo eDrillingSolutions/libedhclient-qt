@@ -25,6 +25,8 @@ static QMetaEnum _qualityEnum() {
 
 Client::Client() {
     qRegisterMetaType<ReadTagHolder>();
+    qRegisterMetaType<DownloadSession::FailReason>();
+    qRegisterMetaType<UploadSession::FailReason>();
 }
 
 Client::~Client() {
