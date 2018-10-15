@@ -60,7 +60,7 @@ QString eDrillingHub::Protocol::FileUploadRequest(const QString &filename, qint6
 QString eDrillingHub::Protocol::FileUploadTransfer(std::shared_ptr<UploadSession> session, std::function<void(const QByteArray&)> transfer_fn) {
     qint64 transferred = 0;
     QByteArray data;
-    QCryptographicHash hash(QCryptographicHash::Sha3_512);
+    QCryptographicHash hash(eDrillingHub::Protocol::hashing_algorithm);
 
     while ((data = session->device()->read(65536)).size() > 0) {
         transferred += data.size();

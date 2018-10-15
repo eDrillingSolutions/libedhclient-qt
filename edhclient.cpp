@@ -362,7 +362,7 @@ void Client::handleDownload(const QByteArray &bytes) {
 std::shared_ptr<DownloadSession> Client::createDownloadSession() {
     Download download;
     download.session = std::make_shared<DownloadSession>();
-    download.hashfn = std::make_shared<QCryptographicHash>(QCryptographicHash::Sha3_512);
+    download.hashfn = std::make_shared<QCryptographicHash>(eDrillingHub::Protocol::hashing_algorithm);
     _downloads.append(download);
 
     connect(download.session.get(), &DownloadSession::download, this, [this](const QString& file) {

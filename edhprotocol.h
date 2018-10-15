@@ -55,6 +55,12 @@ namespace eDrillingHub {
     };
 
     namespace Protocol {
+#if (QT_VERSION >= QT_VERSION_CHECK(5,9,0))
+        const auto hashing_algorithm = QCryptographicHash::Keccak_512;
+#else
+        const auto hashing_algorithm = QCryptographicHash::Sha3_512;
+#endif
+
         const QString UnsubscribeAllCommand = "unsubscribe";;
         const QString BrowseCommand = "browse";
         const QString ReadTagTemplate = "read|%1";
